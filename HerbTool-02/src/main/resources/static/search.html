@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模糊搜索</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <style>
+        /* 内联CSS样式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #555;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            background-color: #f4f4f4;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>模糊搜索</h2>
+    <nav>
+        <a class="nav-link" href="index.html">返回主页</a> |
+        <a class="nav-link" href="add.html">添加药材</a> |
+        <a class="nav-link" href="classify.html">分类查询</a>
+    </nav>
+    <form id="searchForm">
+        <label for="search-keyword">关键词:</label>
+        <input type="text" id="search-keyword" name="keyword" required>
+        <button type="submit">搜索</button>
+    </form>
+    <ul id="search-result"></ul>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#searchForm').on('submit', function (e) {
+            e.preventDefault();
+            var data = {
+                keyword: $('#search-keyword').val()
+            };
+            $.ajax({
+                url: 'http://localhost:8080/herbs/search',
+                method: 'GET',
+                data: data,
+                success: function (response) {
+                    $('#search-result').empty();
+                    if (response.length === 0) {
+                        $('#search-result').append('<li>没有查找到匹配的药材</li>');
+                    } else {
+                        response.forEach(function (herb) {
+                            $('#search-result').append('<li>' + herb.name + ' - ' + herb.category + ' - ' + herb.effect + '</li>'); // 添加了效用信息
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('操作失败: ' + error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

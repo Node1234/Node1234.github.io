@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加药材</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+</head>
+<style>
+    /* 内联CSS样式 */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        width: 80%;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    nav {
+        background-color: #333;
+        padding: 10px 0;
+        text-align: center;
+    }
+    .nav-link {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 15px;
+        font-size: 18px;
+    }
+    .nav-link:hover {
+        text-decoration: underline;
+    }
+    form {
+        width: 50%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #555;
+    }
+    #add-result {
+        text-align: center;
+        margin-top: 20px;
+        color: green;
+    }
+</style>
+<body>
+<div class="container">
+    <h2>添加药材</h2>
+    <nav>
+        <a href="index.html" class="nav-link">返回主页</a> |
+        <a href="classify.html" class="nav-link">分类查询</a> |
+        <a href="search.html" class="nav-link">模糊搜索</a>
+    </nav>
+    <form id="addForm">
+        <label for="name">药材名称:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="category">类别:</label>
+        <input type="text" id="category" name="category" required>
+        <label for="effect">功效:</label>
+        <input type="text" id="effect" name="effect" required>
+        <button type="submit">添加</button>
+    </form>
+    <p id="add-result"></p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#addForm').on('submit', function(e) {
+            e.preventDefault();
+            var data = {
+                name: $('#name').val(),
+                category: $('#category').val(),
+                effect: $('#effect').val()
+            };
+            $.ajax({
+                url: 'http://localhost:8080/herbs/add',
+                method: 'POST',
+                data: data,
+                success: function(response) {
+                    $('#add-result').text('添加成功');
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 400) {
+                        alert('药材已存在请不要重复添加');
+                    } else {
+                        alert('操作失败: ' + error);
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
+
+
